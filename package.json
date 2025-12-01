@@ -1,5 +1,5 @@
 {
-  "name": "@signalk/assemblyscript-plugin-sdk",
+  "name": "signalk-assemblyscript-plugin-sdk",
   "version": "0.1.0",
   "description": "AssemblyScript SDK for developing Signal K WASM plugins",
   "main": "index.js",
