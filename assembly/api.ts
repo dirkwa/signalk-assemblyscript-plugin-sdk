@@ -178,7 +178,7 @@ export function getSelfPath(path: string): string | null {
   }
 
   // Decode result
-  const bytes = new Uint8Array(resultBuffer, 0, len)
+  const bytes = Uint8Array.wrap(resultBuffer, 0, len)
   return String.UTF8.decode(bytes.buffer)
 }
 
@@ -216,7 +216,7 @@ export function getPath(path: string): string | null {
   }
 
   // Decode result
-  const bytes = new Uint8Array(resultBuffer, 0, len)
+  const bytes = Uint8Array.wrap(resultBuffer, 0, len)
   return String.UTF8.decode(bytes.buffer)
 }
 
@@ -243,7 +243,7 @@ export function readConfig(): string {
   }
 
   // Decode result
-  const bytes = new Uint8Array(resultBuffer, 0, len)
+  const bytes = Uint8Array.wrap(resultBuffer, 0, len)
   return String.UTF8.decode(bytes.buffer)
 }
 

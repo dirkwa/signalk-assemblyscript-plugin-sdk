@@ -1,2 +1,5 @@
-# node modukles
+# node modules
 node_modules/
+build/  
+*.tgz
+

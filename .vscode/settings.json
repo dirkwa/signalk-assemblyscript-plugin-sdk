@@ -1,0 +1,15 @@
+{
+  "typescript.tsdk": "node_modules/assemblyscript/lib",
+  "typescript.validate.enable": false,
+  "files.associations": {
+    "assembly/**/*.ts": "assemblyscript"
+  },
+  "files.exclude": {
+    "**/*.asm.js": true,
+    "node_modules": true,
+    "build": true
+  },
+  "[typescript]": {
+    "editor.formatOnSave": false
+  }
+}
