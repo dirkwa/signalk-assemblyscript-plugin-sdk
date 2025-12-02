@@ -1,12 +1,11 @@
 /**
  * Network API for AssemblyScript plugins
  *
- * Provides HTTP client functionality placeholder
+ * Provides HTTP client functionality using as-fetch
  * Requires 'network' capability in plugin manifest
- *
- * NOTE: Full as-fetch integration is pending proper Asyncify configuration.
- * For now, use the hybrid Node.js/WASM pattern for HTTP requests.
  */
+
+import { fetch, Response } from 'as-fetch'
 
 /**
  * @internal
@@ -28,11 +27,7 @@ export function hasNetworkCapability(): boolean {
 }
 
 /**
- * HTTP GET request (placeholder)
- *
- * NOTE: This is a placeholder. For HTTP requests, use the hybrid approach
- * shown in the signalk-logviewer example where Node.js handles HTTP and
- * WASM registers endpoints.
+ * HTTP GET request using as-fetch
  *
  * @param url The URL to fetch
  * @returns Response body as string, or null on error
@@ -42,9 +37,20 @@ export function httpGet(url: string): string | null {
     return null
   }
 
-  // TODO: Integrate as-fetch when Asyncify is properly configured
-  // For now, plugins needing HTTP should use hybrid Node.js/WASM pattern
-  return null
+  try {
+    const response: Response | null = fetch(url)
+    if (response === null) {
+      return null
+    }
+
+    if (response.status !== 200) {
+      return null
+    }
+
+    return response.text()
+  } catch (e) {
+    return null
+  }
 }
 
 /**
