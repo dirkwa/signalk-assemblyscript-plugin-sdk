@@ -11,6 +11,8 @@ The AssemblyScript SDK allows JavaScript and TypeScript developers to write WASM
 - ✅ Small binaries (3-10 KB typical)
 - ✅ Good performance (80-90% of Rust)
 - ✅ Familiar tooling (npm, TypeScript)
+- ✅ HTTP requests via `as-fetch` with Asyncify
+- ✅ Resource provider capability for REST APIs
 
 ## Installation
 
@@ -364,9 +366,68 @@ const pos = new Position(60.1, 24.9)
 const pathValue = new PathValue('position', pos.toJSON())
 ```
 
+## Resource Providers
+
+WASM plugins can register as **resource providers** to serve data via the Signal K REST API.
+
+### Setup
+
+1. Add capability to `package.json`:
+```json
+{
+  "wasmCapabilities": {
+    "resourceProvider": true
+  }
+}
+```
+
+2. Register in your plugin's `start()`:
+```typescript
+import {
+  registerResourceProvider,
+  ResourceGetRequest
+} from 'signalk-assemblyscript-plugin-sdk/assembly/resources'
+
+start(config: string): i32 {
+  if (registerResourceProvider('weather')) {
+    debug('Registered as weather resource provider')
+  }
+  return 0
+}
+```
+
+3. Export handler functions:
+```typescript
+// List all resources - GET /signalk/v2/api/resources/weather
+export function resource_list(queryJson: string): string {
+  return '{"current":' + cachedData.toJSON() + '}'
+}
+
+// Get specific resource - GET /signalk/v2/api/resources/weather/{id}
+export function resource_get(requestJson: string): string {
+  const req = ResourceGetRequest.parse(requestJson)
+  if (req.id === 'current') {
+    return cachedData.toJSON()
+  }
+  return '{"error":"Not found"}'
+}
+```
+
+### API Access
+
+Once registered, your resources are available at:
+```bash
+curl http://localhost:3000/signalk/v2/api/resources/weather
+curl http://localhost:3000/signalk/v2/api/resources/weather/current
+```
+
+See the weather-plugin example for a complete implementation.
+
 ## Examples
 
-See examples/wasm-plugins/hello-assemblyscript for a complete working example.
+See examples/wasm-plugins/ in the signalk-server repository:
+- `hello-assemblyscript` - Basic plugin example
+- `weather-plugin` - Network requests + resource provider
 
 ## Comparison: Rust vs AssemblyScript
 
